@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
   {%- comment -%} jekyll-seo-tag emits <title>, description, Open Graph, Twitter card, canonical {%- endcomment -%}
   {% seo %}
   <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
@@ -58,7 +59,8 @@
     table { border-collapse: collapse; width: 100%; margin: 1.5em 0; font-size: 0.94rem; display: block; overflow-x: auto; }
     th, td { border: 1px solid var(--line); padding: 0.55em 0.8em; text-align: left; vertical-align: top; }
     th { background: var(--soft); font-weight: 600; }
-    .mermaid { margin: 1.8em 0; text-align: center; }
+    .mermaid { margin: 1.8em 0; overflow-x: auto; }
+    .mermaid svg { display: block; margin: 0 auto; height: auto; max-width: none; }
     .site-footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
     @media (max-width: 600px) { h1 { font-size: 1.8rem; } .wrap { padding-top: 2rem; } }
   </style>
@@ -76,15 +78,36 @@
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
     const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default', securityLevel: 'strict' });
-    document.querySelectorAll('pre > code.language-mermaid, code.language-mermaid').forEach((code) => {
-      const host = code.closest('pre') || code;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: dark ? 'dark' : 'default',
+      securityLevel: 'strict',
+      flowchart: { useMaxWidth: false },
+      sequence: { useMaxWidth: false }
+    });
+    // Handle both the plain <pre><code class="language-mermaid"> and the kramdown/rouge
+    // <div class="language-mermaid">…</div> wrapper. Guard against empty text.
+    document.querySelectorAll('div.language-mermaid, pre > code.language-mermaid').forEach((node) => {
+      const codeEl = node.tagName === 'CODE' ? node : node.querySelector('code');
+      const src = (codeEl ? codeEl.textContent : node.textContent).trim();
+      if (!src) return;
+      const host = node.closest('div.language-mermaid') || node.closest('pre') || node;
       const div = document.createElement('div');
       div.className = 'mermaid';
-      div.textContent = code.textContent;
+      div.textContent = src;
       host.replaceWith(div);
     });
-    try { await mermaid.run(); } catch (e) { console.error('Mermaid render error:', e); }
+    // Render each diagram independently so one failure can't blank the rest,
+    // and log the exact source of anything that still fails.
+    for (const el of document.querySelectorAll('.mermaid')) {
+      try {
+        await mermaid.run({ nodes: [el] });
+      } catch (e) {
+        console.error('Mermaid failed to render this diagram:\n' + el.textContent + '\n', e);
+        el.innerHTML = '<p style="color:#b91c1c;font:13px/1.5 monospace;margin:0">'
+          + 'This diagram failed to render — see the browser console for details.</p>';
+      }
+    }
   </script>
 </body>
 </html>
