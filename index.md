@@ -73,7 +73,7 @@ graph TB
         edge["EDGE<br/>Nginx Proxy Manager<br/>+ Cloudflared tunnel"]
         ntfy["NTFY<br/>self-hosted push"]
         mgr["AUTO-MANAGER<br/>git queue + broker client"]
-        broker{{"BROKER<br/>deny-by-default<br/>forced command"}}
+        broker(["BROKER<br/>deny-by-default<br/>forced command"])
 
         subgraph apps["Service containers"]
             plex["Media server"]
@@ -308,7 +308,7 @@ The automation manager (its own container) can reach the Proxmox host *only* thr
 ```mermaid
 flowchart TD
     req["AI requests an action<br/>e.g. 'deploy-dealwatch'"] --> ssh["restricted SSH user<br/>(no shell — forced command)"]
-    ssh --> broker{{"BROKER<br/>case statement allowlist"}}
+    ssh --> broker(["BROKER<br/>case statement allowlist"])
     broker -->|"action in allowlist?"| check{allowed?}
     check -->|"no"| deny["❌ deny + log"]
     check -->|"yes, low-risk"| run["✅ run it + log"]
