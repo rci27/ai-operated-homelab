@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rci27.github.io/ai-operated-homelab/sitemap.xml

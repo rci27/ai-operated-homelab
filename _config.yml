@@ -1,0 +1,44 @@
+# ── Site identity (used for SEO <title>, meta description, Open Graph) ──
+title: "Building an AI-Operated Homelab"
+description: >-
+  How to let an AI safely operate a self-hosted server — a deny-by-default
+  broker, a human-in-the-loop control plane, and the discipline that makes it
+  work. Proxmox, Cloudflare Tunnel, Tailscale, self-hosted ntfy, Obsidian,
+  GitHub, and Claude Code.
+author: "rci27"
+lang: en
+
+# ── URLs ──────────────────────────────────────────────────────────────
+# For a PROJECT site (default):  url = https://<rci27>.github.io
+#                                baseurl = "/<repo-name>"
+# For a CUSTOM DOMAIN or a <user>.github.io site:  baseurl = ""
+url: "https://rci27.github.io"        # your Pages host — leave as-is for the default github.io URL
+baseurl: "/ai-operated-homelab"       # repo name — leave as-is; set to "" only if you add a custom domain
+
+# ── Plugins (both are on the GitHub Pages allow-list) ─────────────────
+plugins:
+  - jekyll-seo-tag      # <title>, meta description, Open Graph, Twitter cards, canonical
+  - jekyll-sitemap      # auto-generates /sitemap.xml for search engines
+
+# ── Social / Open Graph card (the thumbnail shown when the link is shared) ──
+image: /assets/social-preview.png
+twitter:
+  card: summary_large_image
+  # username: "yourhandle"   # ← optional
+
+# Apply the layout + social image to every page by default
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /assets/social-preview.png
+
+# ── Don't publish these repo files as web pages ───────────────────────
+exclude:
+  - README.md
+  - PUBLISHING.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - vendor

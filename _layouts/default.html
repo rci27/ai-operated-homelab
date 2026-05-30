@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- comment -%} jekyll-seo-tag emits <title>, description, Open Graph, Twitter card, canonical {%- endcomment -%}
+  {% seo %}
+  <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #52606d;
+      --bg: #ffffff;
+      --soft: #f5f7fa;
+      --line: #e4e7eb;
+      --accent: #5b21b6;
+      --accent-soft: #f3effc;
+      --code-bg: #0f172a;
+      --max: 820px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e6e8eb; --muted: #9aa5b1; --bg: #0b1120; --soft: #141c2b;
+        --line: #243047; --accent: #a78bfa; --accent-soft: #1c1633;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3 { line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+    h1 { font-size: 2.3rem; margin: 0.2em 0 0.4em; }
+    h2 { font-size: 1.6rem; margin-top: 2.4em; padding-top: 0.4em; border-top: 1px solid var(--line); }
+    h3 { font-size: 1.2rem; margin-top: 1.8em; }
+    h1 + h3 { color: var(--muted); font-weight: 500; border: 0; margin-top: 0; }
+    p, li { color: var(--ink); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 2.5em 0; }
+    blockquote {
+      margin: 1.5em 0; padding: 0.8em 1.2em; background: var(--accent-soft);
+      border-left: 4px solid var(--accent); border-radius: 6px; color: var(--ink);
+    }
+    blockquote p:first-child { margin-top: 0; }
+    blockquote p:last-child { margin-bottom: 0; }
+    code {
+      font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em; background: var(--soft); padding: 0.12em 0.4em; border-radius: 4px;
+    }
+    pre {
+      background: var(--code-bg); color: #e2e8f0; padding: 1.1em 1.2em; border-radius: 10px;
+      overflow-x: auto; font-size: 0.85rem; line-height: 1.55;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+    table { border-collapse: collapse; width: 100%; margin: 1.5em 0; font-size: 0.94rem; display: block; overflow-x: auto; }
+    th, td { border: 1px solid var(--line); padding: 0.55em 0.8em; text-align: left; vertical-align: top; }
+    th { background: var(--soft); font-weight: 600; }
+    .mermaid { margin: 1.8em 0; text-align: center; }
+    .site-footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+    @media (max-width: 600px) { h1 { font-size: 1.8rem; } .wrap { padding-top: 2rem; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    {{ content }}
+    <footer class="site-footer">
+      <p>{{ site.title }} · built as an open homelab guide. Diagrams render via Mermaid.
+      Source on <a href="{{ site.github.repository_url | default: '#' }}">GitHub</a>.</p>
+    </footer>
+  </main>
+
+  {%- comment -%} Render Mermaid fenced code blocks (Kramdown emits <pre><code class="language-mermaid">) {%- endcomment -%}
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'default', securityLevel: 'strict' });
+    document.querySelectorAll('pre > code.language-mermaid, code.language-mermaid').forEach((code) => {
+      const host = code.closest('pre') || code;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent;
+      host.replaceWith(div);
+    });
+    try { await mermaid.run(); } catch (e) { console.error('Mermaid render error:', e); }
+  </script>
+</body>
+</html>
