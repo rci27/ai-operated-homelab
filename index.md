@@ -84,12 +84,13 @@ graph TB
     end
 
     cf --> edge
-    edge --> apps
+    edge --> plex
+    edge --> data
     edge --> ntfy
     laptop -->|"SSH via Tailscale"| broker
     mgr -->|"named actions only"| broker
-    broker -->|"runs allowlisted<br/>commands"| apps
-    apps -->|"alerts"| ntfy
+    broker -->|"runs allowlisted<br/>commands"| deals
+    deals -->|"alerts"| ntfy
     ntfy --> phone
     phone -.->|"Tailscale VPN"| rd
 
